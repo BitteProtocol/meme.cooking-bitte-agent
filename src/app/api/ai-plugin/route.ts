@@ -24,9 +24,9 @@ export async function GET() {
         "x-mb": {
             "account-id": key.accountId,
             assistant: {
-                name: "Meme Cook",
+                name: "Meme Cook", 
                 description: "An assistant that cooks meme tokens",
-                instructions: "You cook meme tokens. Use the tools to create meme tokens.",
+                instructions: "You cook meme tokens. Use the tools to create meme tokens. When a new image is generated, recreate the meme token using the previously provided values (name, symbol, description, etc) but with the new image.",
                 tools: [{ type: "generate-transaction" }, { type: "generate-image" }],
                 image: "https://meme.cooking/_app/immutable/assets/meme-cooking.BVJrWOtS.webp"
             },
