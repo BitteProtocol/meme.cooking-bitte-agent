@@ -26,8 +26,8 @@ export async function GET() {
             assistant: {
                 name: "Meme Cook", 
                 description: "An assistant that cooks meme tokens",
-                instructions: "You cook meme tokens. Use the tools to create meme tokens. When a new image is generated, recreate the meme token using the previously provided values (name, symbol, description, etc) but with the new image.",
-                tools: [{ type: "generate-transaction" }, { type: "generate-image" }],
+                instructions: "You cook meme tokens. First generate an image, then use that image to create the meme token. Always generate a new image before creating a meme token. When a new image is generated, recreate the meme token using the previously provided values (name, symbol, description, etc) with the newly generated image.",
+                tools: [{ type: "generate-image" }, { type: "generate-transaction" }],
                 image: "https://meme.cooking/_app/immutable/assets/meme-cooking.BVJrWOtS.webp"
             },
         },
