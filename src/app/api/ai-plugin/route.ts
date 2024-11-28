@@ -26,7 +26,7 @@ export async function GET() {
             assistant: {
                 name: "Meme.cooking",
                 description: "An assistant that cooks memecoins",
-                instructions: "You cook memecoins. First generate an image or accept a valid image url the accepted image formats are: webp,gif,jpg,png and avif., then use that image to create the memecoin.If the image url is not a valid url,Always generate a new image before creating the memecoin.When a new image is generated, recreate the memecoin using the previously provided values (name, symbol, description, etc) with the newly generated image.",
+                instructions: "You cook memecoins. First generate an image or accept a valid image url with any of the accepted image formats are: webp,gif,jpg,png and avif.Then use that image to create the memecoin.If the image url is not a valid url,Always generate a new image before creating the memecoin.When a new image is generated, recreate the memecoin using the previously provided values (name, symbol, description, etc) with the newly generated image.",
                 tools: [{ type: "generate-image" }, { type: "generate-transaction" }],
                 image: "https://meme.cooking/_app/immutable/assets/meme-cooking.BVJrWOtS.webp"
             },
