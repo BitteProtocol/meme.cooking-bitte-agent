@@ -24,9 +24,9 @@ export async function GET() {
         "x-mb": {
             "account-id": key.accountId,
             assistant: {
-                name: "Meme Cook", 
-                description: "An assistant that cooks meme tokens",
-                instructions: "You cook meme tokens. First generate an image, then use that image to create the meme token. Always generate a new image before creating a meme token. When a new image is generated, recreate the meme token using the previously provided values (name, symbol, description, etc) with the newly generated image.",
+                name: "Meme.cooking",
+                description: "An assistant that cooks memecoins",
+                instructions: "You cook memecoins. First generate an image or accept a valid image url the accepted image formats are: webp,gif,jpg,png and avif., then use that image to create the memecoin.If the image url is not a valid url,Always generate a new image before creating the memecoin.When a new image is generated, recreate the memecoin using the previously provided values (name, symbol, description, etc) with the newly generated image.",
                 tools: [{ type: "generate-image" }, { type: "generate-transaction" }],
                 image: "https://meme.cooking/_app/immutable/assets/meme-cooking.BVJrWOtS.webp"
             },
@@ -59,14 +59,14 @@ export async function GET() {
             },
             "/api/create-meme": {
                 get: {
-                    summary: "Create a new meme token",
-                    description: "Generates a transaction payload for creating a new meme token. It requires the following parameters: name, symbol, depositTokenId, softCap (minimum 100000000000000000000000000), hardCap, durationMs.",
+                    summary: "Create a new memecoin",
+                    description: "Generates a transaction payload for creating a new memecoin. It requires the following parameters: name, symbol, depositTokenId, softCap (minimum 100000000000000000000000000), hardCap, durationMs.",
                     operationId: "create-meme",
                     parameters: [
                         {
                             name: "name",
                             in: "query",
-                            description: "Name of the meme token",
+                            description: "Name of the memecoin",
                             required: true,
                             schema: {
                                 type: "string"
@@ -75,7 +75,7 @@ export async function GET() {
                         {
                             name: "description",
                             in: "query",
-                            description: "Description of the meme token",
+                            description: "Description of the memecoin",
                             required: false,
                             schema: {
                                 type: "string"
@@ -83,8 +83,8 @@ export async function GET() {
                         },
                         {
                             name: "symbol",
-                            in: "query", 
-                            description: "Symbol of the meme token",
+                            in: "query",
+                            description: "Symbol of the memecoin",
                             required: true,
                             schema: {
                                 type: "string"
@@ -103,7 +103,7 @@ export async function GET() {
                         {
                             name: "softCap",
                             in: "query",
-                            description: "Soft cap for the meme token (minimum value: 100000000000000000000000000)",
+                            description: "Soft cap for the memecoin (minimum value: 100000000000000000000000000)",
                             required: false,
                             schema: {
                                 type: "string",
@@ -113,7 +113,7 @@ export async function GET() {
                         {
                             name: "hardCap",
                             in: "query",
-                            description: "Hard cap for the meme token",
+                            description: "Hard cap for the memecoin",
                             required: false,
                             schema: {
                                 type: "string",
@@ -133,7 +133,7 @@ export async function GET() {
                         {
                             name: "imageUrl",
                             in: "query",
-                            description: "URL of the image to use for the meme token",
+                            description: "URL of the image to use for the memecoin,accepted image formats: jpg,png,gif,webp and avif.",
                             required: false,
                             schema: {
                                 type: "string",
@@ -143,7 +143,7 @@ export async function GET() {
                     ],
                     responses: {
                         "200": {
-                            description: "Transaction payload for creating meme token",
+                            description: "Transaction payload for creating memecoin",
                             content: {
                                 "application/json": {
                                     schema: {
