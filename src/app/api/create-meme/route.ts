@@ -39,12 +39,23 @@ export async function GET(request: Request) {
 
         // Create form data
         const formData = new FormData();
-        
-        // Fetch image from URL and create file
         const imageResponse = await fetch(imageUrl);
         const imageBlob = await imageResponse.blob();
-        formData.append('imageFile', imageBlob, 'image.webp');
-        
+        // Fetch image from URL and create file
+        const contentType = imageResponse.headers.get('content-type');
+        let fileExtension = 'webp'; // default
+        if (contentType === 'image/gif') {
+            fileExtension = 'gif';
+        } else if (contentType === 'image/jpeg') {
+            fileExtension = 'jpg';
+        } else if (contentType === 'image/png') {
+            fileExtension = 'png';
+        } else if (contentType === 'image/avif') {
+            fileExtension = 'avif';
+        }
+
+        formData.append('imageFile', imageBlob, `image.${fileExtension}`);
+
         // Add reference metadata
         formData.append('reference', JSON.stringify(referenceMetadata));
 
@@ -105,7 +116,7 @@ export async function GET(request: Request) {
         console.error('Error generating meme creation transaction payload:', error);
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
         const errorStack = error instanceof Error ? error.stack : undefined;
-        
+
         console.error('Error details:', {
             message: errorMessage,
             stack: errorStack,
