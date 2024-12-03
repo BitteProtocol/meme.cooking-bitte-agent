@@ -24,7 +24,7 @@ export async function GET() {
         "x-mb": {
             "account-id": key.accountId,
             assistant: {
-                name: "Meme Cook", 
+                name: "Meme Cook",
                 description: "An assistant that cooks meme tokens",
                 instructions: "You cook meme tokens. First generate an image, then use that image to create the meme token. Always generate a new image before creating a meme token. When a new image is generated, recreate the meme token using the previously provided values (name, symbol, description, etc) with the newly generated image.",
                 tools: [{ type: "generate-image" }, { type: "generate-transaction" }],
@@ -83,7 +83,7 @@ export async function GET() {
                         },
                         {
                             name: "symbol",
-                            in: "query", 
+                            in: "query",
                             description: "Symbol of the meme token",
                             required: true,
                             schema: {
@@ -121,13 +121,13 @@ export async function GET() {
                             }
                         },
                         {
-                            name: "durationMs",
+                            name: "durationHours",
                             in: "query",
-                            description: "Duration in milliseconds",
+                            description: "Duration in hours (minimum: 5 minutes, maximum: 24 hours)",
                             required: false,
                             schema: {
                                 type: "string",
-                                default: "3600000"
+                                default: "24" // Default to 5 minutes in hours
                             }
                         },
                         {
@@ -137,7 +137,7 @@ export async function GET() {
                             required: false,
                             schema: {
                                 type: "string",
-                                default: ""
+                                default: "https://meme.cooking/_app/immutable/assets/meme-cooking.BVJrWOtS.webp"
                             }
                         }
                     ],
