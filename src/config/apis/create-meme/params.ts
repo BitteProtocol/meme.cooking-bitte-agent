@@ -12,7 +12,7 @@ export const PARAMS = [
     name: "description",
     in: "query",
     description: "Description of the memecoin",
-    required: false,
+    required: true,
     schema: {
       type: "string",
     },
@@ -49,21 +49,21 @@ export const PARAMS = [
     name: "softCap",
     in: "query",
     description:
-      "Soft cap for the memecoin (minimum value: 100000000000000000000000000)",
-    required: false,
+      "Soft cap for the memecoin (minimum value: 100 N)",
+    required: true,
     schema: {
-      type: "string",
-      default: "100000000000000000000000000",
+      type: "integer",
+      default: 100,
     },
   },
   {
     name: "hardCap",
     in: "query",
-    description: "Hard cap for the memecoin",
-    required: false,
+    description: "Hard cap for the memecoin (value must be higher then soft cap and max cap value is 4000 N)",
+    required: true,
     schema: {
       type: "string",
-      default: "500000000000000000000000000",
+      default: "500 N",
     },
   },
   {
@@ -71,10 +71,87 @@ export const PARAMS = [
     in: "query",
     description:
       "Duration in hours (minimum: 5 minutes, maximum: 24 hours)",
+    required: true,
+    schema: {
+      type: "string",
+      default: "24",
+    },
+  },
+  {
+    name: "vestingPeriodDays",
+    in: "query",
+    description:
+      "vest period days of the team allocated tokens",
     required: false,
     schema: {
       type: "string",
-      default: "24", // Default to 24h
+      default: "2",
+    },
+  },
+  {
+    name: "cliffPeriodDays",
+    in: "query",
+    description:
+      "Cliff period days of the team allocated tokens",
+    required: false,
+    schema: {
+      type: "string",
+      default: "2",
+    },
+  },
+  {
+    name: "teamAllocationPercent",
+    in: "query",
+    description:
+      "Percentage of memecoin tokens allocated to the team",
+    required: false,
+    schema: {
+      type: "string",
+      default: "5",
+    },
+  },
+  {
+    name: "totalSupply",
+    in: "query",
+    description:
+      "Number of total supply of a token (minimum 1000)",
+    required: false,
+    schema: {
+      type: "integer",
+      default: 1000000000000000000000000000,
+    },
+  },
+  {
+    name: "website",
+    in: "query",
+    description:
+      "Token website address",
+    required: false,
+    schema: {
+      type: "string",
+      default: 'https://meme.cooking',
+    },
+  },
+  {
+    name: "telegram",
+    in: "query",
+    description:
+      "Token telegram channel",
+    required: false,
+    schema: {
+      type: "string",
+      default: 'https://t.me/memedotcookinsupports',
+    },
+  },
+  {
+    name: "twitter",
+    in: "query",
+    description:
+      "Token twitter channel",
+    required: false,
+    schema: {
+      type: "string",
+      default: 'https://t.me/memedotcookin',
     },
   },
   {

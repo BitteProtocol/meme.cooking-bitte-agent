@@ -8,6 +8,10 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const name = searchParams.get("name");
     const symbol = searchParams.get("symbol");
+    const website = searchParams.get("website");
+    const telegram = searchParams.get("telegram");
+    const twitter = searchParams.get("twitter");
+
 
     const teamAllocationPercent = parseFloat(
       searchParams.get("teamAllocationPercent") || "5"
@@ -39,12 +43,12 @@ export async function GET(request: Request) {
 
     // Retrieve and validate totalSupply from query parameters
     const totalSupply =
-      searchParams.get("totalSupply") || "1000000000000000000000000000";
+      searchParams.get("totalSupply") || 1000000000000000000000000000;
     const totalSupplyValue = BigInt(totalSupply);
 
     // Define min and max totalSupply
     const minTotalSupply = BigInt(1000);
-    const maxTotalSupply = BigInt("1000000000000000000000000000");
+    const maxTotalSupply = BigInt(1000000000000000000000000000);
 
     // Validate totalSupply
     if (
@@ -135,9 +139,9 @@ export async function GET(request: Request) {
 
     const referenceMetadata = {
       description: description,
-      twitterLink: "",
-      telegramLink: "",
-      website: "",
+      twitterLink: twitter,
+      telegramLink: telegram,
+      website: website,
     };
 
     // Create form data
