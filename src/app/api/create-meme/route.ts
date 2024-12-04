@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
+
   const nearToFormat = (near: number) => (near * 1e24).toString();
 
   try {
@@ -35,6 +36,7 @@ export async function GET(request: Request) {
         },
         { status: 400 }
       );
+
     }
 
     // Convert days to milliseconds for cliff and vesting periods
