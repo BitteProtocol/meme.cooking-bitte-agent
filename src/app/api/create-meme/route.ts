@@ -15,13 +15,13 @@ export async function GET(request: Request) {
 
 
     const teamAllocationPercent = parseFloat(
-      searchParams.get("teamAllocationPercent") || "5"
+      searchParams.get("teamAllocationPercent") || "0"
     );
     const cliffPeriodDays = parseInt(
-      searchParams.get("cliffPeriodDays") || "2"
+      searchParams.get("cliffPeriodDays") || "0"
     );
     const vestingPeriodDays = parseInt(
-      searchParams.get("vestingPeriodDays") || "5"
+      searchParams.get("vestingPeriodDays") || "0"
     );
 
 
@@ -44,27 +44,12 @@ export async function GET(request: Request) {
     const vestingPeriodMs = vestingPeriodDays * 24 * 60 * 60 * 1000;
 
     // Retrieve and validate totalSupply from query parameters
-    const totalSupply =
-      searchParams.get("totalSupply") || 1000000000000000000000000000;
-    const totalSupplyValue = BigInt(totalSupply);
+    const totalSupply = "1000000000000000000000000000";
 
-    // Define min and max totalSupply
-    const minTotalSupply = BigInt(1000);
-    const maxTotalSupply = BigInt(1000000000000000000000000000);
+
 
     // Validate totalSupply
-    if (
-      totalSupplyValue < minTotalSupply ||
-      totalSupplyValue > maxTotalSupply
-    ) {
-      console.log("Invalid totalSupply:", totalSupply);
-      return NextResponse.json(
-        {
-          error: `totalSupply must be between ${minTotalSupply} and ${maxTotalSupply}`,
-        },
-        { status: 400 }
-      );
-    }
+
 
     const depositTokenId = searchParams.get("depositTokenId") || "wrap.near";
     // Retrieve and convert softCap and hardCap from query parameters
@@ -191,7 +176,7 @@ export async function GET(request: Request) {
           params: {
             methodName: "create_meme",
             args: {
-              duration_ms: durationMs,
+              duration_ms: durationMs.toString(),
               name,
               symbol,
               icon: imageCID,
@@ -202,11 +187,13 @@ export async function GET(request: Request) {
               deposit_token_id: depositTokenId,
               soft_cap: softCap,
               hard_cap: hardCap,
-              team_allocation: [
-                basePoints, // Use base points directly
-                vestingPeriodMs,
-                cliffPeriodMs,
-              ],
+              ...(searchParams.has("teamAllocationPercent") && basePoints > 0 && {
+                team_allocation: [
+                  basePoints, // Use base points directly
+                  vestingPeriodMs,
+                  cliffPeriodMs,
+                ],
+              }),
             },
             gas: "300000000000000",
             deposit: "123560000000000000000000",
@@ -216,7 +203,7 @@ export async function GET(request: Request) {
     };
 
     console.log("Generated transaction payload:", transactionPayload);
-    return NextResponse.json({ transactionPayload });
+    return NextResponse.json({ transactionPayload, message: 'visit https://meme.cooking dashboard to see your new created memecoin.' });
   } catch (error) {
     console.error("Error generating meme creation transaction payload:", error);
     const errorMessage =

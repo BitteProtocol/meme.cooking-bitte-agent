@@ -27,15 +27,6 @@ export const PARAMS = [
     },
   },
   {
-    name: "symbol",
-    in: "query",
-    description: "Symbol of the meme token",
-    required: true,
-    schema: {
-      type: "string",
-    },
-  },
-  {
     name: "depositTokenId",
     in: "query",
     description: "Deposit token ID (defaults to wrap.near)",
@@ -52,8 +43,8 @@ export const PARAMS = [
       "Soft cap for the memecoin (minimum value: 100 N)",
     required: true,
     schema: {
-      type: "integer",
-      default: 100,
+      type: "string",
+      default: '100 N',
     },
   },
   {
@@ -81,7 +72,7 @@ export const PARAMS = [
     name: "vestingPeriodDays",
     in: "query",
     description:
-      "vest period days of the team allocated tokens",
+      "vest period days of the team allocated tokens,  this parameter is not required is optional, if user doesnt set,please use default",
     required: false,
     schema: {
       type: "string",
@@ -92,7 +83,7 @@ export const PARAMS = [
     name: "cliffPeriodDays",
     in: "query",
     description:
-      "Cliff period days of the team allocated tokens",
+      "Cliff period days of the team allocated tokens,  this parameter is not required is optional, if user doesnt set,please use default",
     required: false,
     schema: {
       type: "string",
@@ -103,7 +94,7 @@ export const PARAMS = [
     name: "teamAllocationPercent",
     in: "query",
     description:
-      "Percentage of memecoin tokens allocated to the team",
+      "Percentage of memecoin tokens allocated to the team,  this parameter is not required is optional, if user doesnt set,please use default",
     required: false,
     schema: {
       type: "string",
@@ -111,21 +102,10 @@ export const PARAMS = [
     },
   },
   {
-    name: "totalSupply",
-    in: "query",
-    description:
-      "Number of total supply of a token (minimum 1000)",
-    required: false,
-    schema: {
-      type: "integer",
-      default: 1000000000000000000000000000,
-    },
-  },
-  {
     name: "website",
     in: "query",
     description:
-      "Token website address",
+      "Token website address, this parameter is not required is optional",
     required: false,
     schema: {
       type: "string",
@@ -136,7 +116,7 @@ export const PARAMS = [
     name: "telegram",
     in: "query",
     description:
-      "Token telegram channel",
+      "Token telegram channel, this parameter is not required is optional",
     required: false,
     schema: {
       type: "string",
@@ -147,7 +127,7 @@ export const PARAMS = [
     name: "twitter",
     in: "query",
     description:
-      "Token twitter channel",
+      "Token twitter channel, this parameter is not required is optional",
     required: false,
     schema: {
       type: "string",
@@ -158,7 +138,7 @@ export const PARAMS = [
     name: "imageUrl",
     in: "query",
     description:
-      "URL of the image to use for the memecoin,accepted image formats: jpg,png,gif,webp and avif.",
+      "URL of the image to use for the memecoin,accepted image formats: jpg,jpeg,png,gif,webp and avif.",
     required: false,
     schema: {
       type: "string",

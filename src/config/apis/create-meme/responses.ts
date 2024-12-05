@@ -1,6 +1,6 @@
 export const RESPONSES = {
   "200": {
-    description: "Transaction payload for creating meme token",
+    description: "Transaction payload for creating meme token, returns the transaction payload and the meme url, show the https://meme.cooking url to the user",
     content: {
       "application/json": {
         schema: {
@@ -11,6 +11,7 @@ export const RESPONSES = {
               properties: {
                 receiverId: {
                   type: "string",
+                  description: "Receiver ID for the transaction",
                 },
                 actions: {
                   type: "array",
@@ -19,9 +20,28 @@ export const RESPONSES = {
                     properties: {
                       type: {
                         type: "string",
+                        description: "Type of action to perform",
                       },
                       params: {
                         type: "object",
+                        properties: {
+                          methodName: {
+                            type: "string",
+                            description: "Name of the method to call",
+                          },
+                          args: {
+                            type: "object",
+                            description: "Arguments for the method",
+                          },
+                          gas: {
+                            type: "string",
+                            description: "Gas limit for the transaction",
+                          },
+                          deposit: {
+                            type: "string",
+                            description: "Deposit amount for the transaction",
+                          },
+                        },
                       },
                     },
                   },
@@ -43,6 +63,7 @@ export const RESPONSES = {
           properties: {
             error: {
               type: "string",
+              description: "Error message detailing the issue",
             },
           },
         },
@@ -58,6 +79,7 @@ export const RESPONSES = {
           properties: {
             error: {
               type: "string",
+              description: "Error message detailing the server issue",
             },
           },
         },
