@@ -18,10 +18,10 @@ export async function GET(request: Request) {
       searchParams.get("teamAllocationPercent") || "0"
     );
     const cliffPeriodDays = parseInt(
-      searchParams.get("cliffPeriodDays") || "0"
+      searchParams.get("cliffPeriodDays") || "2"
     );
     const vestingPeriodDays = parseInt(
-      searchParams.get("vestingPeriodDays") || "0"
+      searchParams.get("vestingPeriodDays") || "30"
     );
 
 
