@@ -1,7 +1,44 @@
 import { NextResponse } from "next/server";
 
+interface Launch {
+  meme_id: number;
+  owner: string;
+  end_timestamp_ms: number;
+  name: string;
+  symbol: string;
+  decimals: number;
+  total_supply: string;
+  reference: string;
+  reference_hash: string;
+  deposit_token_id: string;
+  soft_cap: string;
+  hard_cap: string;
+  last_change_ms: number;
+  team_allocation: string;
+  vesting_duration_ms: string;
+  cliff_duration_ms: string;
+  created_blockheight: string;
+  created_timestamp_ms: number;
+  total_deposit: string;
+  total_deposit_fees: string;
+  total_withdraw_fees: string;
+  is_finalized: boolean;
+  token_id: string;
+  pool_id: number;
+  description: string;
+  twitter_link: string;
+  telegram_link: string;
+  website: string;
+  image: string;
+  twitter_verified: boolean;
+  twitter_user_id: string;
+  twitter_username: string;
+  replies_count: number;
+  staker_count: number;
+}
 
-function formatLaunchesResponse(response) {
+
+function formatLaunchesResponse(response: Launch) {
   if (!Array.isArray(response)) {
     return "Invalid response format.";
   }
