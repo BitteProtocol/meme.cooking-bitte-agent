@@ -1,7 +1,7 @@
+import { Buffer } from "buffer";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-
   const nearToFormat = (near: number) => (near * 1e24).toString();
 
   try {
@@ -13,7 +13,6 @@ export async function GET(request: Request) {
     const telegram = searchParams.get("telegram");
     const twitter = searchParams.get("twitter");
 
-
     const teamAllocationPercent = parseFloat(
       searchParams.get("teamAllocationPercent") || "0"
     );
@@ -23,7 +22,6 @@ export async function GET(request: Request) {
     const vestingPeriodDays = parseInt(
       searchParams.get("vestingPeriodDays") || "30"
     );
-
 
     const basePoints = Math.min(teamAllocationPercent * 100, 9000); // Max 90%
 
@@ -36,7 +34,6 @@ export async function GET(request: Request) {
         },
         { status: 400 }
       );
-
     }
 
     // Convert days to milliseconds for cliff and vesting periods
@@ -46,10 +43,7 @@ export async function GET(request: Request) {
     // Retrieve and validate totalSupply from query parameters
     const totalSupply = "1000000000000000000000000000";
 
-
-
     // Validate totalSupply
-
 
     const depositTokenId = searchParams.get("depositTokenId") || "wrap.near";
     // Retrieve and convert softCap and hardCap from query parameters
@@ -134,9 +128,38 @@ export async function GET(request: Request) {
     // Create form data
     const formData = new FormData();
 
-    // Fetch image from URL and create file
-    const imageResponse = await fetch(imageUrl);
-    const imageBlob = await imageResponse.blob();
+    const convertImageUrlToBase64 = async (
+      imageUrl: string
+    ): Promise<string> => {
+      try {
+        const response = await fetch(imageUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch image: ${response.statusText}`);
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        const base64String = Buffer.from(arrayBuffer).toString("base64");
+        const mimeType = response.headers.get("content-type") || "image/jpeg"; // Default to JPEG if MIME type is not available
+        return `data:${mimeType};base64,${base64String}`;
+      } catch (error) {
+        console.error("Error converting image to base64:", error);
+        throw error;
+      }
+    };
+
+    const dataUriToBlob = (dataUri: string): Blob => {
+      const byteString = atob(dataUri.split(",")[1]);
+      const mimeString = dataUri.split(",")[0].split(":")[1].split(";")[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: mimeString });
+    };
+
+    const imageUri = await convertImageUrlToBase64(imageUrl);
+    const imageBlob = dataUriToBlob(imageUri);
+
     formData.append("imageFile", imageBlob, "image.webp");
 
     // Add reference metadata
@@ -187,13 +210,14 @@ export async function GET(request: Request) {
               deposit_token_id: depositTokenId,
               soft_cap: softCap,
               hard_cap: hardCap,
-              ...(searchParams.has("teamAllocationPercent") && basePoints > 0 && {
-                team_allocation: [
-                  basePoints, // Use base points directly
-                  vestingPeriodMs,
-                  cliffPeriodMs,
-                ],
-              }),
+              ...(searchParams.has("teamAllocationPercent") &&
+                basePoints > 0 && {
+                  team_allocation: [
+                    basePoints, // Use base points directly
+                    vestingPeriodMs,
+                    cliffPeriodMs,
+                  ],
+                }),
             },
             gas: "300000000000000",
             deposit: "123560000000000000000000",
@@ -203,7 +227,11 @@ export async function GET(request: Request) {
     };
 
     console.log("Generated transaction payload:", transactionPayload);
-    return NextResponse.json({ transactionPayload, message: 'visit https://meme.cooking dashboard to see your new created memecoin.' });
+    return NextResponse.json({
+      transactionPayload,
+      message:
+        "visit https://meme.cooking dashboard to see your new created memecoin.",
+    });
   } catch (error) {
     console.error("Error generating meme creation transaction payload:", error);
     const errorMessage =
