@@ -1,5 +1,4 @@
 import { APIS } from "@/src/config/apis";
-import { PROMPT_DESC } from "@/src/config/apis/create-meme/api";
 import { INSTRUCTIONS } from "@/src/config/instructions";
 import { NextResponse } from "next/server";
 
@@ -28,7 +27,7 @@ export async function GET() {
             "account-id": key.accountId,
             assistant: {
                 name: "Meme.cooking",
-                description: PROMPT_DESC,
+                description: 'It can helps user creating memecoins as also retrieving memecoin informations from Meme.cooking',
                 instructions: INSTRUCTIONS,
                 tools: [{ type: "generate-image" }, { type: "generate-transaction" }],
                 image: "https://meme.cooking/_app/immutable/assets/meme-cooking.BVJrWOtS.webp"
@@ -60,7 +59,8 @@ export async function GET() {
                     }
                 }
             },
-            "/api/create-meme": APIS.CREATE
+            "/api/create-meme": APIS.CREATE,
+            "/api/launches": APIS.LAUNCHES
         }
     };
 
