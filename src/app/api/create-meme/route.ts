@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { errorString } from "../../utils/error";
-import { convertImageUrlToBase64, dataUriToBlob } from "../../utils/base64";
+import { errorString } from "../../../utils/error";
+import { convertImageUrlToBase64, dataUriToBlob } from "../../../utils/base64";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const nearToFormat = (near: number) => (near * 1e24).toString();
