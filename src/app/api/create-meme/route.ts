@@ -1,7 +1,8 @@
-import { Buffer } from "buffer";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { errorString } from "../../utils/error";
+import { convertImageUrlToBase64, dataUriToBlob } from "../../utils/base64";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const nearToFormat = (near: number) => (near * 1e24).toString();
 
   try {
@@ -128,34 +129,6 @@ export async function GET(request: Request) {
     // Create form data
     const formData = new FormData();
 
-    const convertImageUrlToBase64 = async (
-      imageUrl: string
-    ): Promise<string> => {
-      try {
-        const response = await fetch(imageUrl);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch image: ${response.statusText}`);
-        }
-        const arrayBuffer = await response.arrayBuffer();
-        const base64String = Buffer.from(arrayBuffer).toString("base64");
-        const mimeType = response.headers.get("content-type") || "image/jpeg"; // Default to JPEG if MIME type is not available
-        return `data:${mimeType};base64,${base64String}`;
-      } catch (error) {
-        console.error("Error converting image to base64:", error);
-        throw error;
-      }
-    };
-
-    const dataUriToBlob = (dataUri: string): Blob => {
-      const byteString = atob(dataUri.split(",")[1]);
-      const mimeString = dataUri.split(",")[0].split(":")[1].split(";")[0];
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-      }
-      return new Blob([ab], { type: mimeString });
-    };
 
     const imageUri = await convertImageUrlToBase64(imageUrl);
     const imageBlob = dataUriToBlob(imageUri);
@@ -226,23 +199,15 @@ export async function GET(request: Request) {
       ],
     };
 
-    console.log("Generated transaction payload:", transactionPayload);
     return NextResponse.json({
       transactionPayload,
       message:
         "visit https://meme.cooking dashboard to see your new created memecoin.",
     });
   } catch (error) {
-    console.error("Error generating meme creation transaction payload:", error);
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error occurred";
-    const errorStack = error instanceof Error ? error.stack : undefined;
+    const errorMessage = errorString(error)
 
-    console.error("Error details:", {
-      message: errorMessage,
-      stack: errorStack,
-      type: error?.constructor?.name,
-    });
+
 
     return NextResponse.json(
       {
