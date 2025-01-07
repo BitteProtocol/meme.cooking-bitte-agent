@@ -1,3 +1,6 @@
+import sharp from 'sharp';
+import { Buffer } from 'buffer';
+
 export const convertImageUrlToBase64 = async (
   imageUrl: string
 ): Promise<string> => {
@@ -5,26 +8,18 @@ export const convertImageUrlToBase64 = async (
   if (!response.ok) {
     throw new Error(`Failed to fetch image: ${response.statusText}`);
   }
-  const blob = await response.blob();
-  const imageBitmap = await createImageBitmap(blob);
+  const arrayBuffer = await response.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
 
-  // Create a canvas to resize the image
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  const size = 96; // Desired width and height
-  canvas.width = size;
-  canvas.height = size;
+  // Process all images the same way
+  const image = sharp(buffer);
+  const resizedBuffer = await image
+    .resize(96, 96)
+    .toFormat('png')
+    .toBuffer();
 
-  if (!ctx) {
-    throw new Error("Failed to get 2D context");
-  }
-  // Draw the image onto the canvas, resizing it to 96x96
-  ctx.drawImage(imageBitmap, 0, 0, size, size);
-
-  // Convert the canvas to a base64 string
-  const base64String = canvas.toDataURL(response.headers.get("content-type") || "image/jpeg");
-
-  return base64String;
+  const base64String = resizedBuffer.toString('base64');
+  return `data:image/png;base64,${base64String}`;
 };
 
 export const dataUriToBlob = (dataUri: string): Blob => {
