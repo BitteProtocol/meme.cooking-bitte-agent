@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { errorString } from "../../../utils/error";
+import { convertImageUrlToBase64, dataUriToBlob } from "../../../utils/base64";
 
-export async function GET(request: Request) {
-
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const nearToFormat = (near: number) => (near * 1e24).toString();
 
   try {
@@ -13,7 +14,6 @@ export async function GET(request: Request) {
     const telegram = searchParams.get("telegram");
     const twitter = searchParams.get("twitter");
 
-
     const teamAllocationPercent = parseFloat(
       searchParams.get("teamAllocationPercent") || "0"
     );
@@ -23,7 +23,6 @@ export async function GET(request: Request) {
     const vestingPeriodDays = parseInt(
       searchParams.get("vestingPeriodDays") || "30"
     );
-
 
     const basePoints = Math.min(teamAllocationPercent * 100, 9000); // Max 90%
 
@@ -36,7 +35,6 @@ export async function GET(request: Request) {
         },
         { status: 400 }
       );
-
     }
 
     // Convert days to milliseconds for cliff and vesting periods
@@ -46,10 +44,7 @@ export async function GET(request: Request) {
     // Retrieve and validate totalSupply from query parameters
     const totalSupply = "1000000000000000000000000000";
 
-
-
     // Validate totalSupply
-
 
     const depositTokenId = searchParams.get("depositTokenId") || "wrap.near";
     // Retrieve and convert softCap and hardCap from query parameters
@@ -134,9 +129,10 @@ export async function GET(request: Request) {
     // Create form data
     const formData = new FormData();
 
-    // Fetch image from URL and create file
-    const imageResponse = await fetch(imageUrl);
-    const imageBlob = await imageResponse.blob();
+
+    const imageUri = await convertImageUrlToBase64(imageUrl);
+    const imageBlob = dataUriToBlob(imageUri);
+
     formData.append("imageFile", imageBlob, "image.webp");
 
     // Add reference metadata
@@ -155,7 +151,7 @@ export async function GET(request: Request) {
       },
     });
 
-    const { referenceCID, imageCID } = await uploadResponse.json();
+    const { referenceCID } = await uploadResponse.json();
     console.log("Received reference from meme.cooking:", referenceCID);
 
     if (!referenceCID) {
@@ -179,7 +175,7 @@ export async function GET(request: Request) {
               duration_ms: durationMs.toString(),
               name,
               symbol,
-              icon: imageCID,
+              icon: imageUri,
               decimals: 18,
               total_supply: totalSupply,
               reference: referenceCID,
@@ -187,13 +183,14 @@ export async function GET(request: Request) {
               deposit_token_id: depositTokenId,
               soft_cap: softCap,
               hard_cap: hardCap,
-              ...(searchParams.has("teamAllocationPercent") && basePoints > 0 && {
-                team_allocation: [
-                  basePoints, // Use base points directly
-                  vestingPeriodMs,
-                  cliffPeriodMs,
-                ],
-              }),
+              ...(searchParams.has("teamAllocationPercent") &&
+                basePoints > 0 && {
+                  team_allocation: [
+                    basePoints, // Use base points directly
+                    vestingPeriodMs,
+                    cliffPeriodMs,
+                  ],
+                }),
             },
             gas: "300000000000000",
             deposit: "123560000000000000000000",
@@ -202,19 +199,15 @@ export async function GET(request: Request) {
       ],
     };
 
-    console.log("Generated transaction payload:", transactionPayload);
-    return NextResponse.json({ transactionPayload, message: 'visit https://meme.cooking dashboard to see your new created memecoin.' });
-  } catch (error) {
-    console.error("Error generating meme creation transaction payload:", error);
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error occurred";
-    const errorStack = error instanceof Error ? error.stack : undefined;
-
-    console.error("Error details:", {
-      message: errorMessage,
-      stack: errorStack,
-      type: error?.constructor?.name,
+    return NextResponse.json({
+      transactionPayload,
+      message:
+        "visit https://meme.cooking dashboard to see your new created memecoin.",
     });
+  } catch (error) {
+    const errorMessage = errorString(error)
+
+
 
     return NextResponse.json(
       {
