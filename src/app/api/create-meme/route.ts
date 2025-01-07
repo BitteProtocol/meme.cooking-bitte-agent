@@ -217,7 +217,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           type: error?.constructor?.name,
         },
       },
-      { status: 500 }
+      { status: 502 }
     );
   }
 }
