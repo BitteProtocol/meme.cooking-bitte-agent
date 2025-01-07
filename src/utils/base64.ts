@@ -11,29 +11,15 @@ export const convertImageUrlToBase64 = async (
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  // Use sharp for all images, including GIFs
+  // Process all images the same way
   const image = sharp(buffer);
-  const metadata = await image.metadata();
+  const resizedBuffer = await image
+    .resize(96, 96)
+    .toFormat('png')
+    .toBuffer();
 
-  if (metadata.format === 'gif') {
-    // Convert GIF to PNG
-    const resizedBuffer = await image
-      .resize(96, 96)
-      .toFormat('png')
-      .toBuffer();
-
-    const base64String = resizedBuffer.toString('base64');
-    return `data:image/png;base64,${base64String}`;
-  } else {
-    // Handle non-GIF images
-    const resizedBuffer = await image
-      .resize(96, 96)
-      .toFormat('png')
-      .toBuffer();
-
-    const base64String = resizedBuffer.toString('base64');
-    return `data:image/png;base64,${base64String}`;
-  }
+  const base64String = resizedBuffer.toString('base64');
+  return `data:image/png;base64,${base64String}`;
 };
 
 export const dataUriToBlob = (dataUri: string): Blob => {
