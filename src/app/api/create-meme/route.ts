@@ -151,7 +151,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       },
     });
 
-    const { referenceCID, imageCID } = await uploadResponse.json();
+    const { referenceCID } = await uploadResponse.json();
     console.log("Received reference from meme.cooking:", referenceCID);
 
     if (!referenceCID) {
@@ -175,7 +175,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               duration_ms: durationMs.toString(),
               name,
               symbol,
-              icon: imageCID,
+              icon: imageUri,
               decimals: 18,
               total_supply: totalSupply,
               reference: referenceCID,
