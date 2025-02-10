@@ -1,5 +1,6 @@
 import { APIS } from "@/src/config/apis";
 import { PROMPT_DESC } from "@/src/config/apis/create-meme/api";
+import { ACCOUNT_ID, PLUGIN_URL } from "@/src/config/env";
 import { INSTRUCTIONS } from "@/src/config/instructions";
 import { NextResponse } from "next/server";
 
@@ -21,11 +22,11 @@ export async function GET() {
         },
         servers: [
             {
-                url: config.url,
+                url: PLUGIN_URL,
             },
         ],
         "x-mb": {
-            "account-id": key.accountId,
+            "account-id": ACCOUNT_ID,
             assistant: {
                 name: "Meme.cooking",
                 description: PROMPT_DESC,
