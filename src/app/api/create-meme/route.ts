@@ -130,7 +130,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const formData = new FormData();
 
 
-    const imageUri = await convertImageUrlToBase64(imageUrl);
+    // const imageUri = await convertImageUrlToBase64(imageUrl);
 
     const imageUriHiRes = await convertImageUrlToBase64HighRes(imageUrl);
 
@@ -141,6 +141,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     // Add reference metadata
     formData.append("reference", JSON.stringify(referenceMetadata));
+    const imageSize = imageBlob.size; // Get the size of the image blob
+
+    const baseDeposit = 123560000000000000000000; // Base deposit amount
+    const depositPerByte = 1000000000000000; // Example rate per byte
+    const calculatedDeposit = baseDeposit + imageSize * depositPerByte;
 
     console.log("Sending request to meme.cooking API...");
     // Upload reference metadata
@@ -179,7 +184,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               duration_ms: durationMs.toString(),
               name,
               symbol,
-              icon: imageUri,
+              icon: imageUriHiRes,
               decimals: 18,
               total_supply: totalSupply,
               reference: referenceCID,
@@ -197,7 +202,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 }),
             },
             gas: "300000000000000",
-            deposit: "123560000000000000000000",
+            deposit: calculatedDeposit,
           },
         },
       ],
