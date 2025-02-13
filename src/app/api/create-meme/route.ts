@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { errorString } from "../../../utils/error";
-import { convertImageUrlToBase64, convertImageUrlToBase64HighRes, dataUriToBlob } from "../../../utils/base64";
+import { calculateDeposit, convertImageUrlToBase64, convertImageUrlToBase64HighRes, dataUriToBlob } from "../../../utils/base64";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const nearToFormat = (near: number) => (near * 1e24).toString();
@@ -136,26 +136,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const imageBlob = dataUriToBlob(imageUriHiRes);
 
-    const tokenImg =  await convertImageUrlToBase64(imageUrl);
-    const tokenImgBlob = dataUriToBlob(tokenImg);
+    // const tokenImg =  await convertImageUrlToBase64HighRes(imageUrl);
 
 
     formData.append("imageFile", imageBlob, "image.webp");
 
     // Add reference metadata
     formData.append("reference", JSON.stringify(referenceMetadata));
-    const imageSize = tokenImgBlob.size; // Get the size of the image blob
 
-    const maxDepositNear = 0.13;
-    const maxDepositYocto = maxDepositNear * 1e24;
+
 
     // Calculate deposit based on image size
-    const baseDeposit = 123560000000000000000000; // Base deposit amount
-    const depositPerByte = 1000000000000000; // Example rate per byte
-    let calculatedDeposit = baseDeposit + imageSize * depositPerByte;
 
-    // Ensure calculated deposit does not exceed maxDepositYocto
-    calculatedDeposit = Math.min(calculatedDeposit, maxDepositYocto);
 
     console.log("Sending request to meme.cooking API...");
     // Upload reference metadata
@@ -183,6 +175,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       );
     }
 
+
+
+
     const transactionPayload = {
       receiverId: "meme-cooking.near",
       actions: [
@@ -194,7 +189,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               duration_ms: durationMs.toString(),
               name,
               symbol,
-              icon: tokenImg,
+              icon: imageUriHiRes,
               decimals: 18,
               total_supply: totalSupply,
               reference: referenceCID,
@@ -212,7 +207,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 }),
             },
             gas: "300000000000000",
-            deposit: calculatedDeposit,
+            deposit: calculateDeposit(tokenImg),
           },
         },
       ],
