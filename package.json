@@ -1,10 +1,11 @@
 {
-  "name": "agent-next-boilerplate",
+  "name": "meme-cooking-agent",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev\" \"make-agent dev --serveo\"",
-    "build": "next build && make-agent update -u https://meme-cooking-bitte-agent.vercel.app",
+    "dev": "concurrently \"next dev\" \"make-agent dev\"",
+    "build": "next build",
+    "build:deploy": "next build && make-agent deploy -u https://meme-cooking-bitte-agent.vercel.app",
     "start": "next start",
     "lint": "next lint"
   },
@@ -12,6 +13,7 @@
     "next": "14.2.15",
     "react": "^18",
     "react-dom": "^18",
+    "sharp": "^0.33.5",
     "vercel-url": "^0.2.1"
   },
   "devDependencies": {
@@ -19,9 +21,9 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "concurrently": "^9.1.0",
-    "eslint": "^8",
+    "eslint": "^9.20.0",
     "eslint-config-next": "14.2.15",
-    "make-agent": "latest",
+    "make-agent": "0.2.7",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"

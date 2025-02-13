@@ -82,7 +82,7 @@ function formatLaunchesResponse(response: Launch) {
 }
 
 export async function GET(request: Request) {
-  // ... existing code ...
+
 
   const { searchParams } = new URL(request.url);
   const orderBy = searchParams.get("order_by") || "created_blockheight";
@@ -97,8 +97,10 @@ export async function GET(request: Request) {
     }
 
     const res = formatLaunchesResponse(await response.json())
+    const limitedRes = res.slice(0, 10);
 
-    return NextResponse.json(res);
+
+    return NextResponse.json(limitedRes);
     // Process the memes as needed
   } catch (error) {
     console.error("Failed to fetch memes:", error);
@@ -110,5 +112,4 @@ export async function GET(request: Request) {
     );
   }
 
-  // ... existing code ...
 }
