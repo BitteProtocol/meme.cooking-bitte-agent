@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { errorString } from "../../../utils/error";
-import { convertImageUrlToBase64, dataUriToBlob } from "../../../utils/base64";
+import { convertImageUrlToBase64, convertImageUrlToBase64HighRes, dataUriToBlob } from "../../../utils/base64";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const nearToFormat = (near: number) => (near * 1e24).toString();
@@ -131,7 +131,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 
     const imageUri = await convertImageUrlToBase64(imageUrl);
-    const imageBlob = dataUriToBlob(imageUri);
+
+    const imageUriHiRes = await convertImageUrlToBase64HighRes(imageUrl);
+
+    const imageBlob = dataUriToBlob(imageUriHiRes);
+
 
     formData.append("imageFile", imageBlob, "image.webp");
 
