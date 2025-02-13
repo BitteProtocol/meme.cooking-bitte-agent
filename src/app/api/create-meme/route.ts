@@ -136,7 +136,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const imageBlob = dataUriToBlob(imageUriHiRes);
 
-    // const tokenImg =  await convertImageUrlToBase64HighRes(imageUrl);
+    const tokenImg =  await convertImageUrlToBase64(imageUrl);
 
 
     formData.append("imageFile", imageBlob, "image.webp");
@@ -189,7 +189,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               duration_ms: durationMs.toString(),
               name,
               symbol,
-              icon: imageUriHiRes,
+              icon: tokenImg,
               decimals: 18,
               total_supply: totalSupply,
               reference: referenceCID,
