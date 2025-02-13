@@ -175,7 +175,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               duration_ms: durationMs.toString(),
               name,
               symbol,
-              icon: imageUrl,
+              icon: imageUri,
               decimals: 18,
               total_supply: totalSupply,
               reference: referenceCID,
