@@ -146,9 +146,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     formData.append("reference", JSON.stringify(referenceMetadata));
     const imageSize = tokenImgBlob.size; // Get the size of the image blob
 
+    const maxDepositNear = 0.13;
+    const maxDepositYocto = maxDepositNear * 1e24;
+
+    // Calculate deposit based on image size
     const baseDeposit = 123560000000000000000000; // Base deposit amount
     const depositPerByte = 1000000000000000; // Example rate per byte
-    const calculatedDeposit = baseDeposit + imageSize * depositPerByte;
+    let calculatedDeposit = baseDeposit + imageSize * depositPerByte;
+
+    // Ensure calculated deposit does not exceed maxDepositYocto
+    calculatedDeposit = Math.min(calculatedDeposit, maxDepositYocto);
 
     console.log("Sending request to meme.cooking API...");
     // Upload reference metadata
