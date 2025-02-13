@@ -15,7 +15,7 @@ export const convertImageUrlToBase64 = async (
   // Process image to 16x16 WebP
   const image = sharp(buffer);
   const resizedBuffer = await image
-    .resize(16, 16, {
+    .resize(32, 32, {
       fit: 'contain',
       kernel: 'nearest'
     })

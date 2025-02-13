@@ -136,12 +136,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const imageBlob = dataUriToBlob(imageUriHiRes);
 
+    const tokenImg =  await convertImageUrlToBase64(imageUrl);
+    const tokenImgBlob = dataUriToBlob(tokenImg);
+
 
     formData.append("imageFile", imageBlob, "image.webp");
 
     // Add reference metadata
     formData.append("reference", JSON.stringify(referenceMetadata));
-    const imageSize = imageBlob.size; // Get the size of the image blob
+    const imageSize = tokenImgBlob.size; // Get the size of the image blob
 
     const baseDeposit = 123560000000000000000000; // Base deposit amount
     const depositPerByte = 1000000000000000; // Example rate per byte
@@ -184,7 +187,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               duration_ms: durationMs.toString(),
               name,
               symbol,
-              icon: imageUriHiRes,
+              icon: tokenImg,
               decimals: 18,
               total_supply: totalSupply,
               reference: referenceCID,
