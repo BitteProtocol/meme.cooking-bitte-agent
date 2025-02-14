@@ -48,7 +48,6 @@ export const dataUriToBlob = (dataUri: string): Blob => {
 export const convertImageUrlToBase64HighRes = async (
   imageUrl: string
 ): Promise<string> => {
-  try {
     const response = await fetch(imageUrl);
     if (!response.ok) {
       throw new Error(`Failed to fetch image: ${response.statusText}`);
@@ -79,10 +78,7 @@ export const convertImageUrlToBase64HighRes = async (
 
     const base64String = resizedBuffer.toString('base64');
     return `data:image/webp;base64,${base64String}`;
-  } catch (error) {
-    console.error('Image processing error:', error);
-    throw new Error(`Failed to process image: ${error.message}`);
-  }
+
 };
 
 export const calculateDeposit = (iconBase64: string): string => {

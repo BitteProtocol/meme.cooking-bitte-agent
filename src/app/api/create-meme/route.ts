@@ -175,9 +175,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-
-
-
     const transactionPayload = {
       receiverId: "meme-cooking.near",
       actions: [
